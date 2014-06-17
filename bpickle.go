@@ -8,28 +8,35 @@ import (
 type Anything interface{}
 
 
+func Dumps(anything Anything) string {
+    var v reflect.Value = reflect.ValueOf(anything)
+    var result string = Marshall(v)
+    return result
+}
+
 // The main function to create Bpickle strings. You can pass "anything" to it
 // and it will take care of converting it to whatever is relevant.
-func Dumps(anything Anything) string {
+func Marshall(v reflect.Value) string {
 	var result string
 
-	switch reflect.TypeOf(anything).Kind() {
+	switch v.Kind() {
 	case reflect.Bool:
-		result = dumpBool(reflect.ValueOf(anything).Bool())
+		result = dumpBool(v.Bool())
 	case reflect.Float32:
-		result = dumpFloat64(reflect.ValueOf(anything).Float())
+		result = dumpFloat64(v.Float())
 	case reflect.Float64:
-		result = dumpFloat64(reflect.ValueOf(anything).Float())
+		result = dumpFloat64(v.Float())
 	case reflect.Int:
-		result = dumpInt(reflect.ValueOf(anything).Int())
+		result = dumpInt(v.Int())
 	case reflect.String:
-		result = dumpString(reflect.ValueOf(anything).String())
+		result = dumpString(v.String())
 	case reflect.Slice:
-        value := reflect.ValueOf(anything)
-        slice := value.Slice(0, value.Len() -1)
-		result = dumpSlice(slice)
+        if v.IsNil(){
+            break
+        }
+        result = dumpSlice(v)
     default:
-        fmt.Println(fmt.Sprintf("Unknown type %s", reflect.TypeOf(anything).Name()))
+        fmt.Println(fmt.Sprintf("Unknown type %s", v.Kind()))
 	}
 	return result
 }
@@ -63,14 +70,12 @@ func dumpString(object string) string {
 	return result
 }
 
-func dumpSlice(object reflect.Value) string {
+func dumpSlice(v reflect.Value) string {
 	var result string = "l"
 
-    for i := 0; i < object.Len(); i++ {
-        element := object.Index(i)
-        fmt.Println(element)
-        nested_result := Dumps(element)
-        fmt.Println(nested_result)
+    for i := 0; i < v.Len(); i++ {
+        element := v.Index(i)
+        nested_result := Marshall(element)
         result += nested_result
     }
 

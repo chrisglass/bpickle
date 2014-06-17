@@ -50,11 +50,19 @@ func Test_slices(t *testing.T) {
 	somearray := [3]int{1, 2, 3}
 	someslice := somearray[:]
 	var result = Dumps(someslice)
-	if result != "l:i1;i2;i3;;" {
+	if result != "li1;i2;i3;;" {
 		t.Error(result)
 	}
 }
 
+func Test_slices_string(t *testing.T) {
+	somearray := [3]string{"test", "test2", "test3"}
+	someslice := somearray[:]
+	var result = Dumps(someslice)
+	if result != "lu:4:testu:5:test2u:5:test3;" {
+		t.Error(result)
+	}
+}
 //func Test_float32_positive(t *testing.T) {
 func float32_positive(t *testing.T) {
 	var input float32 = 123.45
