@@ -5,12 +5,10 @@ import (
 	"reflect"
 )
 
-type Anything interface{}
-
 // This is the main interface to this library.
 // You can pass "anything" to it, and it will return a bpickle-string for the
 // corresponding object.
-func Dumps(anything Anything) string {
+func Dumps(anything interface{}) string {
 	var v reflect.Value = reflect.ValueOf(anything)
 	var result string = Marshall(v)
 	return result
@@ -33,10 +31,9 @@ func Marshall(v reflect.Value) string {
 	case reflect.String:
 		result = dumpString(v.String())
 	case reflect.Slice:
-		if v.IsNil() {
-			break
-		}
 		result = dumpSlice(v)
+	case reflect.Map:
+		result = dumpMap(v)
 	default:
 		fmt.Println(fmt.Sprintf("Unknown type %s", v.Kind()))
 	}
@@ -81,6 +78,18 @@ func dumpSlice(v reflect.Value) string {
 		result += nested_result
 	}
 
+	result += ";"
+	return result
+}
+
+// This is limited to maps of type map[string]Value for now.
+func dumpMap(v reflect.Value) string {
+	var result string = "d"
+	var keys []reflect.Value = v.MapKeys()
+	for i := range keys {
+		result += Marshall(keys[i])
+		result += Marshall(v.MapIndex(keys[i]))
+	}
 	result += ";"
 	return result
 }

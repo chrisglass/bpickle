@@ -64,6 +64,14 @@ func Test_slices_string(t *testing.T) {
 	}
 }
 
+func Test_maps_string_string(t *testing.T) {
+	somemap := map[string]string{"test": "blah"}
+	var result = Dumps(somemap)
+	if result != "du:4:testu:4:blah;" {
+		t.Error(result)
+	}
+}
+
 //func Test_float32_positive(t *testing.T) {
 func float32_positive(t *testing.T) {
 	var input float32 = 123.45
