@@ -7,15 +7,17 @@ import (
 
 type Anything interface{}
 
-
+// This is the main interface to this library.
+// You can pass "anything" to it, and it will return a bpickle-string for the
+// corresponding object.
 func Dumps(anything Anything) string {
     var v reflect.Value = reflect.ValueOf(anything)
     var result string = Marshall(v)
     return result
 }
 
-// The main function to create Bpickle strings. You can pass "anything" to it
-// and it will take care of converting it to whatever is relevant.
+// You should pass reflect.Value instances to this.
+// It calls itself recursively for Slices and Dicts.
 func Marshall(v reflect.Value) string {
 	var result string
 
