@@ -13,4 +13,4 @@ Should I used bpickle?
 Probably not.
 
 If you're looking for a network efficient transport format that is multi-language
-and multi-platforms, I recomment having a look at protocol buffers instead.
+and multi-platforms, I recommend having a look at protocol buffers instead.
