@@ -7,6 +7,7 @@ import (
 
 type Anything interface{}
 
+
 // The main function to create Bpickle strings. You can pass "anything" to it
 // and it will take care of converting it to whatever is relevant.
 func Dumps(anything Anything) string {
@@ -24,10 +25,11 @@ func Dumps(anything Anything) string {
 	case reflect.String:
 		result = dumpString(reflect.ValueOf(anything).String())
 	case reflect.Slice:
-		fmt.Println(fmt.Sprintf("%T", anything))
-		var value = reflect.ValueOf(anything).Slice()
-		result = dumpSlice(anything)
-		result = "anything"
+        value := reflect.ValueOf(anything)
+        slice := value.Slice(0, value.Len() -1)
+		result = dumpSlice(slice)
+    default:
+        fmt.Println(fmt.Sprintf("Unknown type %s", reflect.TypeOf(anything).Name()))
 	}
 	return result
 }
@@ -61,11 +63,17 @@ func dumpString(object string) string {
 	return result
 }
 
-func dumpSlice(object []Anything) string {
+func dumpSlice(object reflect.Value) string {
 	var result string = "l"
-	for i := range object {
-		result += Dumps(i)
-	}
+
+    for i := 0; i < object.Len(); i++ {
+        element := object.Index(i)
+        fmt.Println(element)
+        nested_result := Dumps(element)
+        fmt.Println(nested_result)
+        result += nested_result
+    }
+
 	result += ";"
 	return result
 }
