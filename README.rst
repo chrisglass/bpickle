@@ -1,0 +1,16 @@
+This is a work in progress library to serialize and deserialize bpickle.
+
+Why bpickle?
+============
+
+You might ask, rightfully, why yet another serialization library is needed.
+The simple answer is that I need to work with a legacy system that implements
+its own serialization library, called bpickle.
+
+Should I used bpickle?
+=======================
+
+Probably not.
+
+If you're looking for a network efficient transport format that is multi-language
+and multi-platforms, I recomment having a look at protocol buffers instead.
