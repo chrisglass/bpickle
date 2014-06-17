@@ -39,6 +39,13 @@ func Test_string(t *testing.T) {
 	}
 }
 
+func Test_string_utf8(t *testing.T) {
+	var result string = Dumps("une chaîne de caractrères")
+	if result != "u:27:une chaîne de caractrères" {
+		t.Error(result)
+	}
+}
+
 //func Test_float32_positive(t *testing.T) {
 func float32_positive(t *testing.T) {
 	var input float32 = 123.45
