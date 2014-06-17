@@ -23,8 +23,10 @@ func Dumps(anything Anything) string {
 	case reflect.String:
 		result = dumpString(reflect.ValueOf(anything).String())
     case reflect.Slice:
-        var value = reflect.ValueOf(anything)
-        result = dumpSlice(value)
+        fmt.Println(fmt.Sprintf("%T", anything))
+        var value = reflect.ValueOf(anything).Slice()
+        result = dumpSlice(anything)
+        result="anything"
 	}
 	return result
 }
@@ -58,7 +60,7 @@ func dumpString(object string) string {
 	return result
 }
 
-func dumpSlice(object []Anything) {
+func dumpSlice(object []Anything) string {
     var result string = "l"
     for i := range object {
         result += Dumps(i)

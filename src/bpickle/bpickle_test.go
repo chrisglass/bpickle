@@ -46,6 +46,15 @@ func Test_string_utf8(t *testing.T) {
 	}
 }
 
+func Test_slices(t *testing.T) {
+    somearray := [3]int{1,2,3}
+    someslice := somearray[:]
+    var result = Dumps(someslice)
+    if result != "l:i1;i2;i3;;" {
+        t.Error(result)
+    }
+}
+
 //func Test_float32_positive(t *testing.T) {
 func float32_positive(t *testing.T) {
 	var input float32 = 123.45
