@@ -63,6 +63,7 @@ func Test_slices_string(t *testing.T) {
 		t.Error(result)
 	}
 }
+
 //func Test_float32_positive(t *testing.T) {
 func float32_positive(t *testing.T) {
 	var input float32 = 123.45

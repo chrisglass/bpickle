@@ -11,9 +11,9 @@ type Anything interface{}
 // You can pass "anything" to it, and it will return a bpickle-string for the
 // corresponding object.
 func Dumps(anything Anything) string {
-    var v reflect.Value = reflect.ValueOf(anything)
-    var result string = Marshall(v)
-    return result
+	var v reflect.Value = reflect.ValueOf(anything)
+	var result string = Marshall(v)
+	return result
 }
 
 // You should pass reflect.Value instances to this.
@@ -33,12 +33,12 @@ func Marshall(v reflect.Value) string {
 	case reflect.String:
 		result = dumpString(v.String())
 	case reflect.Slice:
-        if v.IsNil(){
-            break
-        }
-        result = dumpSlice(v)
-    default:
-        fmt.Println(fmt.Sprintf("Unknown type %s", v.Kind()))
+		if v.IsNil() {
+			break
+		}
+		result = dumpSlice(v)
+	default:
+		fmt.Println(fmt.Sprintf("Unknown type %s", v.Kind()))
 	}
 	return result
 }
@@ -75,11 +75,11 @@ func dumpString(object string) string {
 func dumpSlice(v reflect.Value) string {
 	var result string = "l"
 
-    for i := 0; i < v.Len(); i++ {
-        element := v.Index(i)
-        nested_result := Marshall(element)
-        result += nested_result
-    }
+	for i := 0; i < v.Len(); i++ {
+		element := v.Index(i)
+		nested_result := Marshall(element)
+		result += nested_result
+	}
 
 	result += ";"
 	return result
