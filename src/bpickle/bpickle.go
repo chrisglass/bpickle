@@ -1,8 +1,9 @@
 package bpickle
 
 import (
-    "fmt"
-    "reflect")
+	"fmt"
+	"reflect"
+)
 
 type Anything interface{}
 
@@ -22,11 +23,11 @@ func Dumps(anything Anything) string {
 		result = dumpInt(reflect.ValueOf(anything).Int())
 	case reflect.String:
 		result = dumpString(reflect.ValueOf(anything).String())
-    case reflect.Slice:
-        fmt.Println(fmt.Sprintf("%T", anything))
-        var value = reflect.ValueOf(anything).Slice()
-        result = dumpSlice(anything)
-        result="anything"
+	case reflect.Slice:
+		fmt.Println(fmt.Sprintf("%T", anything))
+		var value = reflect.ValueOf(anything).Slice()
+		result = dumpSlice(anything)
+		result = "anything"
 	}
 	return result
 }
@@ -61,10 +62,10 @@ func dumpString(object string) string {
 }
 
 func dumpSlice(object []Anything) string {
-    var result string = "l"
-    for i := range object {
-        result += Dumps(i)
-    }
-    result += ";"
-    return result
+	var result string = "l"
+	for i := range object {
+		result += Dumps(i)
+	}
+	result += ";"
+	return result
 }
