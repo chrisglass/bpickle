@@ -2,7 +2,7 @@ package bpickle
 
 import (
 	"fmt"
-    "strconv"
+	"strconv"
 )
 
 func Unmarshall(value string) {
@@ -11,7 +11,13 @@ func Unmarshall(value string) {
 }
 
 func decodeInt(value string) int64 {
-    extracted := value[1:len(value) -1]
-    result , _ := strconv.ParseInt(extracted, 10, 64)
-    return result
+	extracted := value[1 : len(value)-1]
+	result, _ := strconv.ParseInt(extracted, 10, 64)
+	return result
+}
+
+func decodeFloat(value string) float64 {
+	extracted := value[1 : len(value)-1]
+	result, _ := strconv.ParseFloat(extracted, 64)
+	return result
 }
