@@ -34,6 +34,23 @@ func Test_integer_negative(t *testing.T) {
 	}
 }
 
+//Floats
+func Test_float32_positive(t *testing.T) {
+	var input float32 = 123.45
+	var result string = Marshall(input)
+	if result != "f123.45;" {
+		t.Error(result)
+	}
+}
+
+func Test_float32_negative(t *testing.T) {
+	var input float32 = -123.45
+	var result string = Marshall(input)
+	if result != "f-123.45;" {
+		t.Error(result)
+	}
+}
+
 //Strings
 func Test_string(t *testing.T) {
 	var result string = Marshall("some string")
@@ -105,20 +122,4 @@ func maps_string_anything(t *testing.T) {
 	}
 }
 
-//func Test_float32_positive(t *testing.T) {
-func float32_positive(t *testing.T) {
-	var input float32 = 123.45
-	var result string = dumpFloat32(input)
-	if result != "f123.45;" {
-		t.Error(result)
-	}
-}
 
-//func Test_float32_negative(t *testing.T) {
-func float32_negative(t *testing.T) {
-	var input float32 = -123.45
-	var result string = dumpFloat32(input)
-	if result != "f-123.45;" {
-		t.Error(result)
-	}
-}

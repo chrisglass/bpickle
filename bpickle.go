@@ -3,6 +3,7 @@ package bpickle
 import (
 	"fmt"
 	"reflect"
+    "strconv"
 )
 
 // This is the main interface to this library.
@@ -23,9 +24,9 @@ func MarshallValue(v reflect.Value) string {
 	case reflect.Bool:
 		result = dumpBool(v.Bool())
 	case reflect.Float32:
-		result = dumpFloat64(v.Float())
+		result = dumpFloat32(v)
 	case reflect.Float64:
-		result = dumpFloat64(v.Float())
+		result = dumpFloat64(v)
 	case reflect.Int:
 		result = dumpInt(v.Int())
 	case reflect.String:
@@ -56,14 +57,20 @@ func dumpInt(object int64) string {
 	return result
 }
 
-func dumpFloat32(object float32) string {
-	var result string = fmt.Sprintf("i%r;", object)
-	return result
+func dumpFloat(v reflect.Value, bits int) string {
+    f := v.Float()
+    var result string = "f"
+    result += strconv.FormatFloat(f, 'g', -1, bits)
+    result += ";"
+    return result
 }
 
-func dumpFloat64(object float64) string {
-	var result string = fmt.Sprintf("i%r;", object)
-	return result
+func dumpFloat32(v reflect.Value) string {
+	return dumpFloat(v, 32)
+}
+
+func dumpFloat64(v reflect.Value) string {
+	return dumpFloat(v, 64)
 }
 
 func dumpString(object string) string {
