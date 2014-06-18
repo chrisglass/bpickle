@@ -22,19 +22,19 @@ func MarshallValue(v reflect.Value) string {
 
 	switch v.Kind() {
 	case reflect.Bool:
-		result = dumpBool(v.Bool())
+		result = encodeBool(v.Bool())
 	case reflect.Float32:
-		result = dumpFloat32(v)
+		result = encodeFloat32(v)
 	case reflect.Float64:
-		result = dumpFloat64(v)
+		result = encodeFloat64(v)
 	case reflect.Int:
-		result = dumpInt(v.Int())
+		result = encodeInt(v.Int())
 	case reflect.String:
-		result = dumpString(v.String())
+		result = encodeString(v.String())
 	case reflect.Slice:
-		result = dumpSlice(v)
+		result = encodeSlice(v)
 	case reflect.Map:
-		result = dumpMap(v)
+		result = encodeMap(v)
 	case reflect.Interface:
 		result = Marshall(v)
 	default:
@@ -43,7 +43,7 @@ func MarshallValue(v reflect.Value) string {
 	return result
 }
 
-func dumpBool(object bool) string {
+func encodeBool(object bool) string {
 	var representation int = 0
 	if object {
 		representation = 1
@@ -52,12 +52,12 @@ func dumpBool(object bool) string {
 	return result
 }
 
-func dumpInt(object int64) string {
+func encodeInt(object int64) string {
 	var result string = fmt.Sprintf("i%d;", object)
 	return result
 }
 
-func dumpFloat(v reflect.Value, bits int) string {
+func encodeFloat(v reflect.Value, bits int) string {
     f := v.Float()
     var result string = "f"
     result += strconv.FormatFloat(f, 'g', -1, bits)
@@ -65,20 +65,20 @@ func dumpFloat(v reflect.Value, bits int) string {
     return result
 }
 
-func dumpFloat32(v reflect.Value) string {
-	return dumpFloat(v, 32)
+func encodeFloat32(v reflect.Value) string {
+	return encodeFloat(v, 32)
 }
 
-func dumpFloat64(v reflect.Value) string {
-	return dumpFloat(v, 64)
+func encodeFloat64(v reflect.Value) string {
+	return encodeFloat(v, 64)
 }
 
-func dumpString(object string) string {
+func encodeString(object string) string {
 	var result string = fmt.Sprintf("u:%d:%s", len(object), object)
 	return result
 }
 
-func dumpSlice(v reflect.Value) string {
+func encodeSlice(v reflect.Value) string {
 	var result string = "l"
 
 	for i := 0; i < v.Len(); i++ {
@@ -91,7 +91,7 @@ func dumpSlice(v reflect.Value) string {
 	return result
 }
 
-func dumpMap(v reflect.Value) string {
+func encodeMap(v reflect.Value) string {
 	var result string = "d"
 	var keys []reflect.Value = v.MapKeys()
 	for i := range keys {
