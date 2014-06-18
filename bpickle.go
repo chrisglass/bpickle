@@ -8,15 +8,15 @@ import (
 // This is the main interface to this library.
 // You can pass "anything" to it, and it will return a bpickle-string for the
 // corresponding object.
-func Dumps(anything interface{}) string {
+func Marshall(anything interface{}) string {
 	var v reflect.Value = reflect.ValueOf(anything)
-	var result string = Marshall(v)
+	var result string = MarshallValue(v)
 	return result
 }
 
 // You should pass reflect.Value instances to this.
 // It calls itself recursively for Slices and Dicts.
-func Marshall(v reflect.Value) string {
+func MarshallValue(v reflect.Value) string {
 	var result string
 
 	switch v.Kind() {
@@ -74,7 +74,7 @@ func dumpSlice(v reflect.Value) string {
 
 	for i := 0; i < v.Len(); i++ {
 		element := v.Index(i)
-		nested_result := Marshall(element)
+		nested_result := MarshallValue(element)
 		result += nested_result
 	}
 
@@ -82,13 +82,12 @@ func dumpSlice(v reflect.Value) string {
 	return result
 }
 
-// This is limited to maps of type map[string]Value for now.
 func dumpMap(v reflect.Value) string {
 	var result string = "d"
 	var keys []reflect.Value = v.MapKeys()
 	for i := range keys {
-		result += Marshall(keys[i])
-		result += Marshall(v.MapIndex(keys[i]))
+		result += MarshallValue(keys[i])
+		result += MarshallValue(v.MapIndex(keys[i]))
 	}
 	result += ";"
 	return result
