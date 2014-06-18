@@ -3,7 +3,7 @@ package bpickle
 import (
 	"fmt"
 	"reflect"
-    "strconv"
+	"strconv"
 )
 
 // This is the main interface to this library.
@@ -58,11 +58,11 @@ func encodeInt(object int64) string {
 }
 
 func encodeFloat(v reflect.Value, bits int) string {
-    f := v.Float()
-    var result string = "f"
-    result += strconv.FormatFloat(f, 'g', -1, bits)
-    result += ";"
-    return result
+	f := v.Float()
+	var result string = "f"
+	result += strconv.FormatFloat(f, 'g', -1, bits)
+	result += ";"
+	return result
 }
 
 func encodeFloat32(v reflect.Value) string {
@@ -94,9 +94,10 @@ func encodeSlice(v reflect.Value) string {
 func encodeMap(v reflect.Value) string {
 	var result string = "d"
 	var keys []reflect.Value = v.MapKeys()
-	for i := range keys {
-		result += MarshallValue(keys[i])
-		result += MarshallValue(v.MapIndex(keys[i]))
+	for _, k := range keys {
+		result += MarshallValue(k)
+		value := v.MapIndex(k)
+		result += MarshallValue(value)
 	}
 	result += ";"
 	return result

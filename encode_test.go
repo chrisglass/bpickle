@@ -121,5 +121,3 @@ func maps_string_anything(t *testing.T) {
 		t.Error(result)
 	}
 }
-
-
