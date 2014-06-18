@@ -34,8 +34,11 @@ func Marshall(v reflect.Value) string {
 		result = dumpSlice(v)
 	case reflect.Map:
 		result = dumpMap(v)
+    case reflect.Interface:
+        value := reflect.ValueOf(v)
+        result = Marshall(value)
 	default:
-		fmt.Println(fmt.Sprintf("Unknown type %s", v.Kind()))
+        panic(fmt.Sprintf("Unknown type %s", v.Kind()))
 	}
 	return result
 }

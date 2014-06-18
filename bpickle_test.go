@@ -72,6 +72,33 @@ func Test_maps_string_string(t *testing.T) {
 	}
 }
 
+func Test_maps_int_string(t *testing.T) {
+	somemap := map[int]string{1: "blah"}
+	var result = Dumps(somemap)
+	if result != "di1;u:4:blah;" {
+		t.Error(result)
+	}
+}
+
+func Test_maps_int_int(t *testing.T) {
+	somemap := map[int]int{1: 23}
+	var result = Dumps(somemap)
+	if result != "di1;i23;;" {
+		t.Error(result)
+	}
+}
+
+func Test_maps_string_anything(t *testing.T){
+    submap := map[string]int{"value1": 1, "value2": 2}
+    somemap := map[string]interface{}{"type": "some-type", "values": submap}
+	var result = Dumps(somemap)
+    var expected = "du:4:typeu:9:some-typeu:5:valuesdu:5:value1i1;u:5:value2i2;;"
+    if result != expected {
+        t.Error(result)
+    }
+}
+
+// THESE DONT ACTUALLY RUN YET TODO: FIX ETC...
 //func Test_float32_positive(t *testing.T) {
 func float32_positive(t *testing.T) {
 	var input float32 = 123.45
