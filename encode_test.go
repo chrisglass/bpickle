@@ -1,6 +1,7 @@
 package bpickle
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -110,14 +111,12 @@ func Test_maps_int_int(t *testing.T) {
 	}
 }
 
-// THESE DONT ACTUALLY RUN YET TODO: FIX ETC...
-//func Test_maps_string_anything(t *testing.T){
-func maps_string_anything(t *testing.T) {
+func Test_maps_string_anything(t *testing.T) {
 	submap := map[string]int{"value1": 1, "value2": 2}
 	somemap := map[string]interface{}{"type": "some-type", "values": submap}
 	var result = Marshall(somemap)
-	var expected = "du:4:typeu:9:some-typeu:5:valuesdu:5:value1i1;u:5:value2i2;;"
+	var expected = "du:4:typeu:9:some-typeu:6:valuesdu:6:value1i1;u:6:value2i2;;;"
 	if result != expected {
-		t.Error(result)
+		t.Error(fmt.Sprintf("%s is not equal to expected %s", result, expected))
 	}
 }

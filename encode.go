@@ -36,7 +36,9 @@ func MarshallValue(v reflect.Value) string {
 	case reflect.Map:
 		result = encodeMap(v)
 	case reflect.Interface:
-		result = Marshall(v)
+		result = MarshallValue(v.Elem())
+	case reflect.Struct:
+		fmt.Println(fmt.Sprintf("Unknown struct: %T", v))
 	default:
 		panic(fmt.Sprintf("Unknown type %s", v.Kind()))
 	}
@@ -96,8 +98,7 @@ func encodeMap(v reflect.Value) string {
 	var keys []reflect.Value = v.MapKeys()
 	for _, k := range keys {
 		result += MarshallValue(k)
-		value := v.MapIndex(k)
-		result += MarshallValue(value)
+		result += MarshallValue(v.MapIndex(k))
 	}
 	result += ";"
 	return result
