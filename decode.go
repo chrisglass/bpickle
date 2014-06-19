@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 )
+
 // The main entry point for decoding bpickle.
 // Simly pass it the string to decode and it will return a Go object/structure
 // representation.
@@ -38,7 +39,8 @@ func decodeInt(s string, pos int) (result int64, nextPos int) {
 	var endPos int = strings.Index(remaining, ";")
 	var toParse = remaining[:endPos]
 	result, _ = strconv.ParseInt(toParse, 10, 64)
-	return result, endPos + 1
+	nextPos = endPos + 1
+	return
 }
 
 func decodeFloat(s string, pos int) (result float64, nextPos int) {
@@ -47,7 +49,8 @@ func decodeFloat(s string, pos int) (result float64, nextPos int) {
 	var endPos int = strings.Index(remaining, ";")
 	var toParse = remaining[:endPos]
 	result, _ = strconv.ParseFloat(toParse, 64)
-	return result, endPos + 1
+	nextPos = endPos + 1
+	return
 }
 
 func decodeBool(s string, pos int) (result bool, nextPos int) {
