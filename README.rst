@@ -14,3 +14,9 @@ Probably not.
 
 If you're looking for a network efficient transport format that is multi-language
 and multi-platforms, I recommend having a look at protocol buffers instead.
+
+But then why are you developing it?
+===================================
+
+It scratches my itch, and it's a fun and interesting way for me to learn more
+about th inner workings of Go.
