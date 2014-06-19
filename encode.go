@@ -10,8 +10,7 @@ import (
 // You can pass "anything" to it, and it will return a bpickle-string for the
 // corresponding object.
 func Marshall(anything interface{}) (result string) {
-	var v reflect.Value = reflect.ValueOf(anything)
-	result = MarshallValue(v)
+	result = MarshallValue(reflect.ValueOf(anything))
 	return
 }
 
@@ -53,9 +52,8 @@ func encodeBool(object bool) (result string) {
 	return
 }
 
-func encodeInt(object int64) (result string) {
-	result = fmt.Sprintf("i%d;", object)
-	return
+func encodeInt(object int64) string {
+	return fmt.Sprintf("i%d;", object)
 }
 
 func encodeFloat(v reflect.Value, bits int) (result string) {
