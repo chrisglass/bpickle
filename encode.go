@@ -9,16 +9,15 @@ import (
 // This is the main interface to this library.
 // You can pass "anything" to it, and it will return a bpickle-string for the
 // corresponding object.
-func Marshall(anything interface{}) string {
+func Marshall(anything interface{}) (result string) {
 	var v reflect.Value = reflect.ValueOf(anything)
-	var result string = MarshallValue(v)
-	return result
+	result = MarshallValue(v)
+	return
 }
 
 // You should pass reflect.Value instances to this.
 // It calls itself recursively for Slices and Dicts.
-func MarshallValue(v reflect.Value) string {
-	var result string
+func MarshallValue(v reflect.Value) (result string) {
 
 	switch v.Kind() {
 	case reflect.Bool:
@@ -42,29 +41,29 @@ func MarshallValue(v reflect.Value) string {
 	default:
 		panic(fmt.Sprintf("Unknown type %s", v.Kind()))
 	}
-	return result
+	return
 }
 
-func encodeBool(object bool) string {
+func encodeBool(object bool) (result string) {
 	var representation int = 0
 	if object {
 		representation = 1
 	}
-	var result string = fmt.Sprintf("b%d", representation)
-	return result
+	result = fmt.Sprintf("b%d", representation)
+	return
 }
 
-func encodeInt(object int64) string {
-	var result string = fmt.Sprintf("i%d;", object)
-	return result
+func encodeInt(object int64) (result string) {
+	result = fmt.Sprintf("i%d;", object)
+	return
 }
 
-func encodeFloat(v reflect.Value, bits int) string {
+func encodeFloat(v reflect.Value, bits int) (result string) {
 	f := v.Float()
-	var result string = "f"
+	result = "f"
 	result += strconv.FormatFloat(f, 'g', -1, bits)
 	result += ";"
-	return result
+	return
 }
 
 func encodeFloat32(v reflect.Value) string {
@@ -76,12 +75,11 @@ func encodeFloat64(v reflect.Value) string {
 }
 
 func encodeString(object string) string {
-	var result string = fmt.Sprintf("u:%d:%s", len(object), object)
-	return result
+	return fmt.Sprintf("u:%d:%s", len(object), object)
 }
 
-func encodeSlice(v reflect.Value) string {
-	var result string = "l"
+func encodeSlice(v reflect.Value) (result string) {
+	result = "l"
 
 	for i := 0; i < v.Len(); i++ {
 		element := v.Index(i)
@@ -90,16 +88,16 @@ func encodeSlice(v reflect.Value) string {
 	}
 
 	result += ";"
-	return result
+	return
 }
 
-func encodeMap(v reflect.Value) string {
-	var result string = "d"
+func encodeMap(v reflect.Value) (result string) {
+	result = "d"
 	var keys []reflect.Value = v.MapKeys()
 	for _, k := range keys {
 		result += MarshallValue(k)
 		result += MarshallValue(v.MapIndex(k))
 	}
 	result += ";"
-	return result
+	return
 }
