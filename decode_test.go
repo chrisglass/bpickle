@@ -59,3 +59,10 @@ func Test_unmarshall_string(t *testing.T) {
 		t.Error(result)
 	}
 }
+
+func Test_unmarshall_string_utf8(t *testing.T) {
+	var result string = Unmarshall("u:5:santé").(string)
+	if result != "santé" {
+		t.Error(result)
+	}
+}
