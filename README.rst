@@ -19,4 +19,4 @@ But then why are you developing it?
 ===================================
 
 It scratches my itch, and it's a fun and interesting way for me to learn more
-about th inner workings of Go.
+about the inner workings of Go.
