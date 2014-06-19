@@ -4,7 +4,7 @@ Why bpickle?
 ============
 
 You might ask, rightfully, why yet another serialization library is needed.
-The simple answer is that I need to work with a legacy system that implements
+The simple answer is that I need to work with a system that implements
 its own serialization library, called bpickle.
 
 Should I used bpickle?
