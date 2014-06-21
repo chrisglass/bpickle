@@ -17,6 +17,8 @@ func Unmarshall(s string) (result interface{}) {
 // This is only there to allow for containers to call it "recursively" (not actually
 // recursive, but close).
 func unmarshallInner(s string, pos int) (result interface{}, nextPos int) {
+
+	fmt.Println(fmt.Sprintf("Calling unmarshallInner: '%s', pos: '%d'", s, pos))
 	letter := string([]rune(s)[pos])
 	switch letter {
 	case "i":
@@ -27,9 +29,10 @@ func unmarshallInner(s string, pos int) (result interface{}, nextPos int) {
 		return decodeBool(s, pos)
 	case "u":
 		return decodeString(s, pos)
+	case "l":
+		return decodeSlice(s, pos)
 	default:
-		fmt.Println(fmt.Sprintf("Unknown format letter: '%s'", letter))
-		return
+		panic(fmt.Sprintf("Unknown format letter: '%s'", letter))
 	}
 }
 
@@ -66,14 +69,34 @@ func decodeBool(s string, pos int) (result bool, nextPos int) {
 
 func decodeString(s string, pos int) (result string, nextPos int) {
 	pos += 2                            // Skip "u:"
-	var remaining string = s[pos:]      // The remaining string, without "u:"
-	pos = strings.Index(remaining, ":") // Now the position of the ":" after the int
-	var toParse = remaining[:pos]       // the string beween "u:" and the next ":"
+    var first_sep, second_sep int
+
+    first_sep = pos  // The position of the first separator relative to s
+	var remaining string = s[first_sep:]      // The remaining string, without "u:"
+	second_sep = strings.Index(remaining, ":") // Now the position of the ":" after the int
+	var toParse = remaining[:second_sep]       // the string beween "u:" and the next ":" (the lenght)
+    //second_sep += 2 // The second separator is now relative to s
 	var lenght int64
 	lenght, _ = strconv.ParseInt(toParse, 10, 0)
-	pos += 1                                        // Skip ":"
-	var runes []rune = []rune(remaining)            // We need to count in runes, not in chars/bytes.
-	result = string(runes[pos : int64(pos)+lenght]) // The string, from after ":" to the specified rune lenght.
-	nextPos = pos + 1                               // Put the pos at the next position and return
+	pos += 1                                      // Skip ":"
+	var runes []rune = []rune(s)          // We need to count in runes, not in chars/bytes.
+	fmt.Println(fmt.Sprintf("Lenght '%s' pos: '%d', second_sep: '%d'", lenght, pos, second_sep))
+	result = string(runes[second_sep : second_sep+int(lenght)]) // The string, from after ":" to the specified rune lenght.
+	nextPos = second_sep + int(lenght)                   // Pos is now at the end of the string
+	nextPos = pos + 1                             // Put the pos at the next position and return
+	return
+}
+
+func decodeSlice(s string, pos int) (result []interface{}, nextPos int) {
+	pos += 1 // Skip the "l"
+	fmt.Println(fmt.Sprintf("Before loop: string: '%s' pos: '%d'", s, pos))
+	for string([]rune(s)[pos]) != ";" {
+		var object interface{}
+		object, pos = unmarshallInner(s, pos)
+		fmt.Println(fmt.Sprintf("Got: '%s' pos: '%d'", object, pos))
+		result = append(result, object)
+	}
+	pos += 1 // Skip the ";"
+	nextPos = pos
 	return
 }

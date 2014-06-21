@@ -44,7 +44,7 @@ func MarshallValue(v reflect.Value) (result string) {
 }
 
 func encodeBool(object bool) (result string) {
-	var representation int = 0
+	representation := 0
 	if object {
 		representation = 1
 	}

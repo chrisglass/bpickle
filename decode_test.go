@@ -1,7 +1,7 @@
 package bpickle
 
 import (
-	//"fmt"
+	"fmt"
 	"testing"
 )
 
@@ -64,5 +64,24 @@ func Test_unmarshall_string_utf8(t *testing.T) {
 	var result string = Unmarshall("u:5:santé").(string)
 	if result != "santé" {
 		t.Error(result)
+	}
+}
+
+func Test_decode_string_direct(t *testing.T) {
+    result, pos := decodeString("u:4:test", 0)
+
+    if result != "test" {
+        t.Error(result)
+    }
+    if pos != 8 {
+        t.Error(fmt.Sprintf("Position is '%d', should be 8", pos))
+    }
+}
+
+// Lists (slices)
+func Test_unmarshall_slice(t *testing.T) {
+	var result []string = Unmarshall("lu:4:testu:5:test2;").([]string)
+	for _, v := range result {
+		fmt.Println(v)
 	}
 }
