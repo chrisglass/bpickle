@@ -69,21 +69,15 @@ func decodeBool(s string, pos int) (result bool, nextPos int) {
 
 func decodeString(s string, pos int) (result string, nextPos int) {
 	pos += 2                            // Skip "u:"
-    var first_sep, second_sep int
-
-    first_sep = pos  // The position of the first separator relative to s
-	var remaining string = s[first_sep:]      // The remaining string, without "u:"
-	second_sep = strings.Index(remaining, ":") // Now the position of the ":" after the int
-	var toParse = remaining[:second_sep]       // the string beween "u:" and the next ":" (the lenght)
-    //second_sep += 2 // The second separator is now relative to s
+	var remaining string = s[pos:]      // The remaining string, without "u:"
+	pos = strings.Index(remaining, ":") // Now the position of the ":" after the int
+	var toParse = remaining[:pos]       // the string beween "u:" and the next ":"
 	var lenght int64
 	lenght, _ = strconv.ParseInt(toParse, 10, 0)
-	pos += 1                                      // Skip ":"
-	var runes []rune = []rune(s)          // We need to count in runes, not in chars/bytes.
-	fmt.Println(fmt.Sprintf("Lenght '%s' pos: '%d', second_sep: '%d'", lenght, pos, second_sep))
-	result = string(runes[second_sep : second_sep+int(lenght)]) // The string, from after ":" to the specified rune lenght.
-	nextPos = second_sep + int(lenght)                   // Pos is now at the end of the string
-	nextPos = pos + 1                             // Put the pos at the next position and return
+	pos += 1                                        // Skip ":"
+	var runes []rune = []rune(remaining)            // We need to count in runes, not in chars/bytes.
+	result = string(runes[pos : int64(pos)+lenght]) // The string, from after ":" to the specified rune lenght.
+	nextPos = pos + 1                               // Put the pos at the next position and return
 	return
 }
 
