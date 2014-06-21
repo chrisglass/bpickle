@@ -72,16 +72,25 @@ func decodeBool(s string, pos int) (result bool, nextPos int) {
 }
 
 func decodeString(s string, pos int) (result string, nextPos int) {
-	pos += 2                            // Skip "u:"
-	var remaining string = s[pos:]      // The remaining string, without "u:"
-	pos = strings.Index(remaining, ":") // Now the position of the ":" after the int
-	var toParse = remaining[:pos]       // the string beween "u:" and the next ":"
+	var runes []rune = []rune(s)
+	var parse_start, parse_end int = pos + 2, 0
+	var remaining string = s[parse_start:]
 	var lenght int64
-	lenght, _ = strconv.ParseInt(toParse, 10, 0)
-	pos += 1                                        // Skip ":"
-	var runes []rune = []rune(remaining)            // We need to count in runes, not in chars/bytes.
-	result = string(runes[pos : int64(pos)+lenght]) // The string, from after ":" to the specified rune lenght.
-	nextPos = pos + 1                               // Put the pos at the next position and return
+
+    // First parse the lenght int
+    parse_end = strings.Index(remaining, ":")
+    parse_end += parse_start
+	to_parse := s[parse_start:parse_end]
+	lenght, _ = strconv.ParseInt(to_parse, 10, 0)
+
+    // Now parse the string itself, since we can compute the end with the lenght
+    parse_start = parse_end
+    parse_start += 1
+    parse_end = parse_start + int(lenght)
+
+    // We need to count in runes - utf8!
+	result = string(runes[parse_start : parse_end])
+	nextPos = parse_end + 1
 	return
 }
 

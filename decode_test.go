@@ -118,14 +118,14 @@ func Test_unmarshall_string_utf8(t *testing.T) {
 }
 
 // DOES NOT WORK FOR NOW
-func decode_string_direct(t *testing.T) {
-	result, pos := decodeString("u:4:test", 0)
+func Test_decode_string_offset(t *testing.T) {
+	result, pos := decodeString("i123;u:4:test", 5)
 
 	if result != "test" {
 		t.Error(result)
 	}
-	if pos != 8 {
-		t.Error(fmt.Sprintf("Position is '%d', should be 8", pos))
+	if pos != 14 {
+		t.Error(fmt.Sprintf("Position is '%d', should be 14", pos))
 	}
 }
 
