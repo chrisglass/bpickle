@@ -17,8 +17,6 @@ func Unmarshall(s string) (result interface{}) {
 // This is only there to allow for containers to call it "recursively" (not actually
 // recursive, but close).
 func unmarshallInner(s string, pos int) (result interface{}, nextPos int) {
-
-	fmt.Println(fmt.Sprintf("Calling unmarshallInner: '%s', pos: '%d'", s, pos))
 	letter := string([]rune(s)[pos])
 	switch letter {
 	case "i":
@@ -37,33 +35,39 @@ func unmarshallInner(s string, pos int) (result interface{}, nextPos int) {
 }
 
 func decodeInt(s string, pos int) (result int64, nextPos int) {
-	pos += 1
-	var remaining string = s[pos:]
-	var endPos int = strings.Index(remaining, ";")
-	var toParse = remaining[:endPos]
-	result, _ = strconv.ParseInt(toParse, 10, 64)
-	nextPos = endPos + 1
+	var parse_start, parse_end int = pos + 1, 0
+	var remaining string = s[parse_start:]
+
+	parse_end = strings.Index(remaining, ";")
+	parse_end += parse_start
+
+	var to_parse = s[parse_start:parse_end]
+	result, _ = strconv.ParseInt(to_parse, 10, 64)
+	nextPos = parse_end + 1
 	return
 }
 
 func decodeFloat(s string, pos int) (result float64, nextPos int) {
-	pos += 1
-	var remaining string = s[pos:]
-	var endPos int = strings.Index(remaining, ";")
-	var toParse = remaining[:endPos]
-	result, _ = strconv.ParseFloat(toParse, 64)
-	nextPos = endPos + 1
+	var parse_start, parse_end int = pos + 1, 0
+	var remaining string = s[parse_start:]
+	parse_end = strings.Index(remaining, ";")
+	parse_end += parse_start
+
+	var to_parse = s[parse_start:parse_end]
+	result, _ = strconv.ParseFloat(to_parse, 64)
+	nextPos = parse_end + 1
 	return
 }
 
 func decodeBool(s string, pos int) (result bool, nextPos int) {
-	pos += 1
 	var err error
-	result, err = strconv.ParseBool(s[pos : pos+1])
+	var parse_start, parse_end int = pos + 1, 0
+	parse_end = parse_start + 1
+	result, err = strconv.ParseBool(s[parse_start:parse_end])
 	if err != nil {
 		panic(fmt.Sprintf("Invalid value for boolean '%s'", s[pos:pos+1]))
 	}
-	nextPos = pos + 1
+	nextPos = parse_end + 1
 	return
 }
 
@@ -83,11 +87,11 @@ func decodeString(s string, pos int) (result string, nextPos int) {
 
 func decodeSlice(s string, pos int) (result []interface{}, nextPos int) {
 	pos += 1 // Skip the "l"
-	fmt.Println(fmt.Sprintf("Before loop: string: '%s' pos: '%d'", s, pos))
+	//fmt.Println(fmt.Sprintf("Before loop: string: '%s' pos: '%d'", s, pos))
 	for string([]rune(s)[pos]) != ";" {
 		var object interface{}
 		object, pos = unmarshallInner(s, pos)
-		fmt.Println(fmt.Sprintf("Got: '%s' pos: '%d'", object, pos))
+		//fmt.Println(fmt.Sprintf("Got: '%s' pos: '%d'", object, pos))
 		result = append(result, object)
 	}
 	pos += 1 // Skip the ";"

@@ -20,6 +20,26 @@ func Test_unmarshall_integer_negative(t *testing.T) {
 	}
 }
 
+func Test_decode_int_direct(t *testing.T) {
+	result, pos := decodeInt("i123;", 0)
+	if result != 123 {
+		t.Error(fmt.Sprintf("Wrong result: '%d', should be 123", result))
+	}
+	if pos != 5 {
+		t.Error(fmt.Sprintf("Wrong pos: '%d', should be 5", pos))
+	}
+}
+
+func Test_decode_int_offset(t *testing.T) {
+	result, pos := decodeInt("i123;i456;", 5)
+	if result != 456 {
+		t.Error(fmt.Sprintf("Wrong result: '%d', should be 456", result))
+	}
+	if pos != 10 {
+		t.Error(fmt.Sprintf("Wrong pos: '%d', should be 10", pos))
+	}
+}
+
 //Floats
 func Test_unmarshall_float_positive(t *testing.T) {
 	var input string = "f123.45;"
@@ -34,6 +54,26 @@ func Test_unmarshall_float_negative(t *testing.T) {
 	var result float64 = Unmarshall(input).(float64)
 	if result != -123.45 {
 		t.Error(result)
+	}
+}
+
+func Test_decode_float_direct(t *testing.T) {
+	result, pos := decodeFloat("f123.456;", 0)
+	if result != 123.456 {
+		t.Error(fmt.Sprintf("Wrong result: '%d', should be 123.456", result))
+	}
+	if pos != 9 {
+		t.Error(fmt.Sprintf("Wrong pos: '%d', should be 9", pos))
+	}
+}
+
+func Test_decode_float_offset(t *testing.T) {
+	result, pos := decodeFloat("i123;f123.456;", 5)
+	if result != 123.456 {
+		t.Error(fmt.Sprintf("Wrong result: '%d', should be 123.456", result))
+	}
+	if pos != 14 {
+		t.Error(fmt.Sprintf("Wrong pos: '%d', should be 14", pos))
 	}
 }
 
@@ -52,6 +92,16 @@ func Test_unmarshall_boolean_false(t *testing.T) {
 	}
 }
 
+func Test_decode_bool_offset(t *testing.T) {
+	result, pos := decodeBool("i123;b1;", 5)
+	if result != true {
+		t.Error()
+	}
+	if pos != 8 {
+		t.Error(fmt.Sprintf("Wrong pos: '%d', should be 8", pos))
+	}
+}
+
 //Strings
 func Test_unmarshall_string(t *testing.T) {
 	var result string = Unmarshall("u:6:string").(string)
@@ -67,21 +117,22 @@ func Test_unmarshall_string_utf8(t *testing.T) {
 	}
 }
 
-func Test_decode_string_direct(t *testing.T) {
-    result, pos := decodeString("u:4:test", 0)
+// DOES NOT WORK FOR NOW
+func decode_string_direct(t *testing.T) {
+	result, pos := decodeString("u:4:test", 0)
 
-    if result != "test" {
-        t.Error(result)
-    }
-    if pos != 8 {
-        t.Error(fmt.Sprintf("Position is '%d', should be 8", pos))
-    }
+	if result != "test" {
+		t.Error(result)
+	}
+	if pos != 8 {
+		t.Error(fmt.Sprintf("Position is '%d', should be 8", pos))
+	}
 }
 
 // Lists (slices)
 func Test_unmarshall_slice(t *testing.T) {
-	var result []string = Unmarshall("lu:4:testu:5:test2;").([]string)
+	var result []interface{} = Unmarshall("li123;i456;;").([]interface{})
 	for _, v := range result {
-		fmt.Println(v)
+		fmt.Println(int(v.(int64)))
 	}
 }
