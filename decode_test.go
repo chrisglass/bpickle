@@ -117,7 +117,6 @@ func Test_unmarshall_string_utf8(t *testing.T) {
 	}
 }
 
-// DOES NOT WORK FOR NOW
 func Test_decode_string_offset(t *testing.T) {
 	result, pos := decodeString("i123;u:4:test", 5)
 
@@ -130,9 +129,35 @@ func Test_decode_string_offset(t *testing.T) {
 }
 
 // Lists (slices)
-func Test_unmarshall_slice(t *testing.T) {
+func Test_unmarshall_int_slice(t *testing.T) {
 	var result []interface{} = Unmarshall("li123;i456;;").([]interface{})
-	for _, v := range result {
-		fmt.Println(int(v.(int64)))
+	var dataSlice []int64 = make([]int64, len(result))
+	var expected []int64 = []int64{123, 456}
+
+	for i, d := range result {
+		dataSlice[i] = d.(int64)
+	}
+	//XXX: Not sure how sorted the slices of int are.
+	for i, _ := range dataSlice {
+		if dataSlice[i] != expected[i] {
+			t.Error()
+		}
+	}
+}
+
+// DOES NOT YET WORK
+func unmarshall_string_slice(t *testing.T) {
+	var result []interface{} = Unmarshall("lu:4:testu:5:test2;").([]interface{})
+	var dataSlice []string = make([]string, len(result))
+	var expected []string = []string{"test", "test2"}
+
+	for i, d := range result {
+		dataSlice[i] = d.(string)
+	}
+	//XXX: Not sure how sorted the slices of int are.
+	for i, _ := range dataSlice {
+		if dataSlice[i] != expected[i] {
+			t.Error()
+		}
 	}
 }

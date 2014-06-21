@@ -77,19 +77,19 @@ func decodeString(s string, pos int) (result string, nextPos int) {
 	var remaining string = s[parse_start:]
 	var lenght int64
 
-    // First parse the lenght int
-    parse_end = strings.Index(remaining, ":")
-    parse_end += parse_start
+	// First parse the lenght int
+	parse_end = strings.Index(remaining, ":")
+	parse_end += parse_start
 	to_parse := s[parse_start:parse_end]
 	lenght, _ = strconv.ParseInt(to_parse, 10, 0)
 
-    // Now parse the string itself, since we can compute the end with the lenght
-    parse_start = parse_end
-    parse_start += 1
-    parse_end = parse_start + int(lenght)
+	// Now parse the string itself, since we can compute the end with the lenght
+	parse_start = parse_end
+	parse_start += 1
+	parse_end = parse_start + int(lenght)
 
-    // We need to count in runes - utf8!
-	result = string(runes[parse_start : parse_end])
+	// We need to count in runes - utf8!
+	result = string(runes[parse_start:parse_end])
 	nextPos = parse_end + 1
 	return
 }
