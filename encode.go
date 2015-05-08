@@ -9,14 +9,14 @@ import (
 // This is the main interface to this library.
 // You can pass "anything" to it, and it will return a bpickle-string for the
 // corresponding object.
-func Marshall(anything interface{}) (result string) {
-	result = MarshallValue(reflect.ValueOf(anything))
+func Marshal(anything interface{}) (result string) {
+	result = MarshalValue(reflect.ValueOf(anything))
 	return
 }
 
 // You should pass reflect.Value instances to this.
 // It calls itself recursively for Slices and Dicts.
-func MarshallValue(v reflect.Value) (result string) {
+func MarshalValue(v reflect.Value) (result string) {
 
 	switch v.Kind() {
 	case reflect.Bool:
@@ -34,7 +34,7 @@ func MarshallValue(v reflect.Value) (result string) {
 	case reflect.Map:
 		result = encodeMap(v)
 	case reflect.Interface:
-		result = MarshallValue(v.Elem())
+		result = MarshalValue(v.Elem())
 	case reflect.Struct:
 		fmt.Println(fmt.Sprintf("Unknown struct: %T", v))
 	default:
@@ -81,7 +81,7 @@ func encodeSlice(v reflect.Value) (result string) {
 
 	for i := 0; i < v.Len(); i++ {
 		element := v.Index(i)
-		nested_result := MarshallValue(element)
+		nested_result := MarshalValue(element)
 		result += nested_result
 	}
 
@@ -93,8 +93,8 @@ func encodeMap(v reflect.Value) (result string) {
 	result = "d"
 	var keys []reflect.Value = v.MapKeys()
 	for _, k := range keys {
-		result += MarshallValue(k)
-		result += MarshallValue(v.MapIndex(k))
+		result += MarshalValue(k)
+		result += MarshalValue(v.MapIndex(k))
 	}
 	result += ";"
 	return
